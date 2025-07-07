@@ -8,6 +8,15 @@ Voice agents need to stop talking when users interrupt - just like humans do. Sp
 
 **Works with any audio source** - no vendor lock-in.
 
+## Features
+
+- **Lean**: Single class, ~200 lines of code
+- **Fast**: ~2ms processing time per 20ms audio chunk  
+- **Adaptive**: Automatically adjusts to background noise
+- **Vendor Agnostic**: Works with any audio source (Twilio, AWS, Vonage, WebRTC, etc.)
+- **Multiple Formats**: Supports mu-law (telephony) and PCM16 (HD audio)
+- **No Dependencies**: Just NumPy and SciPy
+
 ## Usage
 
 ```python
@@ -25,43 +34,6 @@ while True:
         start_listening()
 ```
 
-## Multi-Vendor Integration
-
-```python
-# Twilio WebSocket
-from speechhook import create_telephony_hook
-hook = create_telephony_hook()
-# Process Twilio base64 audio: hook.process_audio(base64.b64decode(payload))
-
-# AWS Connect
-from speechhook import create_telephony_hook  
-hook = create_telephony_hook()
-# Process AWS audio stream: hook.process_audio(audio_chunk)
-
-# Vonage/Nexmo
-from speechhook import create_telephony_hook
-hook = create_telephony_hook()
-# Process Vonage audio: hook.process_audio(audio_data)
-
-# WebRTC (browser)
-from speechhook import create_hd_hook
-hook = create_hd_hook(sample_rate=16000)
-# Process WebRTC audio: hook.process_audio(pcm_data)
-
-# Local microphone
-from speechhook import create_hd_hook
-hook = create_hd_hook(sample_rate=44100)
-# Process mic audio: hook.process_audio(microphone_chunk)
-```
-
-## Features
-
-- **Lean**: Single class, ~200 lines of code
-- **Fast**: ~2ms processing time per 20ms audio chunk  
-- **Adaptive**: Automatically adjusts to background noise
-- **Vendor Agnostic**: Works with any audio source (Twilio, AWS, Vonage, WebRTC, etc.)
-- **Multiple Formats**: Supports mu-law (telephony) and PCM16 (HD audio)
-- **No Dependencies**: Just NumPy and SciPy
 
 ## How It Works
 
@@ -69,8 +41,6 @@ hook = create_hd_hook(sample_rate=44100)
 2. **Feature Extraction**: Speech-band energy, spectral flux, zero-crossing rate
 3. **Adaptive Thresholding**: Rolling median noise floor estimation
 4. **State Machine**: Hysteresis logic prevents false positives
-
-## API
 
 ### `SpeechHook(sample_rate=8000, encoding='mulaw')`
 
@@ -90,43 +60,7 @@ Main detection class.
 - `create_hd_hook(sample_rate=16000)` - PCM16 for high-quality audio
 - `create_broadcast_hook()` - 22kHz PCM16 for broadcast quality
 
-## Demo
-
-### Basic Demo
-```bash
-python demo.py
-```
-Runs basic demo, multi-vendor integration examples, streaming simulation, and performance test.
-
-### Real Voice Agent Demo
-```bash
-# Install dependencies first
-python setup_demo.py
-
-# Run the voice agent
-python voice_agent_demo.py
-```
-
-**Complete voice-to-voice pipeline:**
-1. 🎤 **Listen**: Real-time microphone input
-2. 📝 **Transcribe**: Speech-to-text (Google Speech API)
-3. 🤖 **Think**: LLM processing (OpenAI GPT or simple responses)
-4. 🗣️ **Speak**: Text-to-speech output
-5. ⚡ **Interrupt**: SpeechHook detects user interruptions during TTS
-
-**Features:**
-- Real-time conversation with natural interruptions
-- Works with or without OpenAI API key
-- Cross-platform audio support (macOS, Linux, Windows)
-- Automatic ambient noise adjustment
-
-## Performance
-
-- **Latency**: 40-60ms detection delay
-- **CPU**: ~2ms processing per 20ms audio chunk
-- **Memory**: <1MB per detector instance
-
-## Real-World Impact
+## Expected Functionality
 
 ### Traditional Flow (Without SpeechHook)
 ```
@@ -147,7 +81,3 @@ AI: "What about tomorrow? Tomorrow will be..."
 ```
 
 This natural conversation flow is what makes voice agents feel human-like rather than robotic.
-
-## License
-
-MIT
